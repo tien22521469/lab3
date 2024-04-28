@@ -10,7 +10,7 @@ namespace Library
     {
         public int IDMA { get; set; }
         public string TenMonAn { get; set; }
-        public string HinhAnh { get; set; }
+        public byte[] HinhAnh { get; set; }
         public string IDNCC { get; set; }
     }
 }

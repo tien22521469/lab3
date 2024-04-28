@@ -41,6 +41,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.idnccTxtBox = new System.Windows.Forms.TextBox();
+            this.listenBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.foodGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,6 +116,7 @@
             this.foodGridView.RowTemplate.Height = 24;
             this.foodGridView.Size = new System.Drawing.Size(356, 371);
             this.foodGridView.TabIndex = 7;
+            this.foodGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.foodGridView_DataError);
             // 
             // label1
             // 
@@ -175,11 +177,23 @@
             this.idnccTxtBox.Size = new System.Drawing.Size(324, 48);
             this.idnccTxtBox.TabIndex = 12;
             // 
+            // listenBtn
+            // 
+            this.listenBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listenBtn.Location = new System.Drawing.Point(600, 20);
+            this.listenBtn.Name = "listenBtn";
+            this.listenBtn.Size = new System.Drawing.Size(156, 48);
+            this.listenBtn.TabIndex = 14;
+            this.listenBtn.Text = "Listen";
+            this.listenBtn.UseVisualStyleBackColor = true;
+            this.listenBtn.Click += new System.EventHandler(this.listenBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 513);
+            this.Controls.Add(this.listenBtn);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.idnccTxtBox);
             this.Controls.Add(this.label4);
@@ -216,6 +230,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox idnccTxtBox;
+        private System.Windows.Forms.Button listenBtn;
     }
 }
 

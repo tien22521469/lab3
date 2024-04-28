@@ -9,10 +9,66 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using Newtonsoft.Json;
+
 namespace SQLite
 {
     public partial class Form1 : Form
     {
+        private TcpListener _listener;
+
+        public void StartListening(int port)
+        {
+            _listener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
+            _listener.Start();
+
+            while (true)
+            {
+                var client = _listener.AcceptTcpClient();
+                var clientThread = new Thread(() => HandleClient(client));
+                clientThread.Start();
+            }
+        }
+
+        private void HandleClient(TcpClient client)
+        {
+            try
+            {
+                var buffer = new byte[1024];
+                var stream = client.GetStream();
+                var bytesRead = stream.Read(buffer, 0, buffer.Length);
+                var request = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
+                // Handle the request
+                HandleRequest(request);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                // Always close the client, even if an error occurred
+                client.Close();
+            }
+        }
+
+        private void HandleRequest(string request)
+        {
+            // Parse the request into a FoodModel
+            var food = JsonConvert.DeserializeObject<FoodModel>(request);
+
+            // Update the database
+            SQLiteDataAccess.SaveFood(food);
+        }
+
+
+
+
         List<FoodModel> food = new List<FoodModel>();
         public Form1()
         {
@@ -79,11 +135,32 @@ namespace SQLite
         {
             if (food.Count > 0)
             {
-                Random random = new Random();
-                int randomIndex = random.Next(0, food.Count);
-                FoodModel randomFood = food[randomIndex];
-                randomTxtBox.Text = randomFood.TenMonAn;
+                //Random random = new Random();
+                //int randomIndex = random.Next(0, food.Count);
+                //FoodModel randomFood = food[randomIndex];
+                //randomTxtBox.Text = randomFood.TenMonAn;
+
+                var randomFood = SQLiteDataAccess.GetRandomFood();
+                // Display the random food in the UI
+                randomTxtBox.Text = randomFood?.TenMonAn;
+
             }
+        }
+
+        private void listenBtn_Click(object sender, EventArgs e)
+        {
+            Form2 client = new Form2();
+            client.Show();
+        }
+
+        private void foodGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // Log the error
+            Console.WriteLine($"DataError event occurred. Column: {e.ColumnIndex}, Row: {e.RowIndex}, Error: {e.Exception.Message}");
+
+            // Prevent the error message from being displayed
+            e.ThrowException = false;
+
         }
     }
 

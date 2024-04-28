@@ -7,6 +7,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Library
 {
@@ -46,6 +47,24 @@ namespace Library
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        public static FoodModel GetRandomFood()
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = cnn.Query<FoodModel>("SELECT * FROM Food ORDER BY RANDOM() LIMIT 1", new DynamicParameters());
+                return output.FirstOrDefault();
+            }
+        }
+
+        public void HandleRequest(string request)
+        {
+            // Parse the request into a FoodModel
+            var food = JsonConvert.DeserializeObject<FoodModel>(request);
+
+            // Update the database
+            SQLiteDataAccess.SaveFood(food);
         }
     }
 }
